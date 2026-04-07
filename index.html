@@ -26,9 +26,9 @@ function navTo(id){
 :root{--bg:#0A0A0F;--surface:#111118;--surface2:#16161F;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#E8E6E0;--muted:rgba(232,230,224,0.45);--accent:#C8A96E;--accent2:#4A7FD4;--white:#FFFFFF}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;cursor:none}
-.cursor{position:fixed;width:10px;height:10px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .3s,height .3s}
-.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(200,169,110,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;cursor:auto}
+.cursor{display:none}
+.cursor-ring{display:none}
 .cursor.hover{width:18px;height:18px}.cursor-ring.hover{width:56px;height:56px;opacity:.4}
 .page{display:none;min-height:100vh}.page.active{display:block}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.6}
@@ -496,7 +496,7 @@ footer{border-top:1px solid var(--border);padding:32px 64px;display:flex;align-i
       <h2>"Mis Viajes" deja de ser una <em>confirmación de compra</em> para convertirse en el hub que acompaña al usuario durante todo el journey.</h2>
     </div>
   </div>
-  <img class="cs-img" src="images/despegar/proposed_solution.png" alt="Solución planteada Despegar" loading="lazy">
+  <div style="overflow-x:auto;overflow-y:auto;max-height:600px;border-radius:6px;border:1px solid var(--border);margin:32px 0"><img style="width:100%;display:block" src="images/despegar/proposed_solution.png" alt="Solución planteada Despegar" loading="lazy"></div>
   <p class="cs-img-caption">Documento de solución · Timeline, recomendaciones y Travel Score</p>
   <hr class="cs-divider">
   <div class="cs-section">
@@ -510,10 +510,8 @@ footer{border-top:1px solid var(--border);padding:32px 64px;display:flex;align-i
       <div class="cs-card-step"><div class="cs-card-step-num">04</div><h3>Traslado</h3><p>Última pieza del itinerario. Travel Score al 100%, beneficios desbloqueados.</p></div>
     </div>
   </div>
-  <img class="cs-img" src="images/despegar/userflows.png" alt="User flows Despegar" loading="lazy">
+  <div style="overflow-x:auto;overflow-y:auto;max-height:600px;border-radius:6px;border:1px solid var(--border);margin:32px 0"><img style="width:100%;display:block" src="images/despegar/userflows.png" alt="User flows Despegar" loading="lazy"></div>
   <p class="cs-img-caption">Flujos completos · Compra de vuelo, alojamiento, actividad y traslado</p>
-  <img class="cs-img" src="images/despegar/presentation.png" alt="Pantallas finales Despegar" loading="lazy">
-  <p class="cs-img-caption">Pantallas finales · Propuesta de diseño completa</p>
   <div style="display:flex;gap:16px;flex-wrap:wrap">
     <button class="btn-primary" onclick="openCase('galicia')">Próximo proyecto →</button>
     <button class="btn-secondary" onclick="goHome()">← Volver al portfolio</button>
