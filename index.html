@@ -75,7 +75,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Instrument Sans',
 /* ── NAV ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  padding: 16px 48px;
+  padding: 16px calc((100vw - 1200px) / 2 + 48px);
   display: flex; align-items: center; justify-content: space-between;
   background: rgba(247,245,240,0.95);
   backdrop-filter: blur(12px);
@@ -106,7 +106,7 @@ nav {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 72px 48px 48px;
+  padding: 72px calc((100vw - 1200px) / 2 + 48px) 48px;
   align-items: center;
   gap: 80px;
   border-bottom: 1px solid var(--border);
@@ -163,7 +163,6 @@ nav {
 
 /* ── SECTIONS ── */
 section { border-bottom: 1px solid var(--border); }
-section + section { border-top: 2px solid var(--border); }
 .section-inner { max-width: 1200px; margin: 0 auto; padding: 80px 48px; }
 .section-header {
   display: flex; align-items: baseline; gap: 24px; margin-bottom: 64px;
@@ -312,7 +311,7 @@ footer {
 .cs-page { background: var(--bg); min-height: 100vh; }
 .cs-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  padding: 16px 48px;
+  padding: 16px calc((100vw - 1200px) / 2 + 48px);
   display: flex; align-items: center; justify-content: space-between;
   background: rgba(247,245,240,0.95); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
