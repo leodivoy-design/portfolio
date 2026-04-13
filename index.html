@@ -4,6 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leonel Divoy — UX/UI Designer</title>
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+  var pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
+  window.scrollTo(0,0);
+}
+function goHome(){showPage('home');}
+function openCase(id){showPage(id);}
+function navTo(id){
+  showPage('home');
+  setTimeout(function(){
+    var el=document.getElementById(id);
+    if(el)el.scrollIntoView({behavior:'smooth'});
+  },100);
+}
+function setActiveNav(id){
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    a.classList.remove('active');
+    if(a.getAttribute('data-section') === id) a.classList.add('active');
+  });
+}
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  document.querySelectorAll('.theme-toggle-icon').forEach(function(el){
+    el.textContent=theme==='dark'?'●':'○';
+  });
+  document.querySelectorAll('.theme-toggle-label').forEach(function(el){
+    el.textContent=theme==='dark'?'Light':'Dark';
+  });
+}
+function toggleTheme(){
+  var current=document.documentElement.getAttribute('data-theme');
+  var next=current==='dark'?'light':'dark';
+  applyTheme(next);
+  try{localStorage.setItem('portfolio-theme',next);}catch(e){}
+}
+// Load saved theme immediately
+(function(){
+  try{
+    var saved=localStorage.getItem('portfolio-theme');
+    if(saved)applyTheme(saved);
+    else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)applyTheme('dark');
+  }catch(e){}
+})();
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Instrument+Sans:wght@300;400;500;600&display=swap');
 
@@ -11,7 +57,7 @@
   --bg: #F7F5F0;
   --surface: #EFECE5;
   --ink: #1A1814;
-  --muted: #9A9589;
+  --muted: #7A7570;
   --border: #E2DDD4;
   --accent: #1A1814;
   --em: #3A5A3A;
@@ -60,7 +106,7 @@ nav {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 120px 64px 80px;
+  padding: 80px 64px 64px;
   align-items: center;
   gap: 80px;
   border-bottom: 1px solid var(--border);
@@ -84,7 +130,7 @@ nav {
 .hero-title em { font-style: italic; color: var(--em); }
 .hero-right { padding-top: 40px; }
 .hero-desc {
-  font-size: 16px; color: #6B675F; line-height: 1.8;
+  font-size: 16px; color: #4A4640; line-height: 1.8;
   margin-bottom: 40px; max-width: 400px;
 }
 .hero-actions { display: flex; gap: 24px; align-items: center; }
@@ -123,7 +169,7 @@ section { border-bottom: 1px solid var(--border); }
 }
 .section-num {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 13px; color: var(--em); font-weight: 300;
+  font-size: 13px; color: var(--em); font-weight: 600;
 }
 .section-title {
   font-family: 'Cormorant Garamond', serif;
@@ -134,7 +180,7 @@ section { border-bottom: 1px solid var(--border); }
 
 /* ── ABOUT ── */
 .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-.about-text p { font-size: 15px; color: #6B675F; line-height: 1.9; margin-bottom: 20px; }
+.about-text p { font-size: 15px; color: #4A4640; line-height: 1.9; margin-bottom: 20px; }
 .about-text p strong { color: var(--ink); font-weight: 500; }
 .about-skills { margin-top: 40px; }
 .skills-label {
@@ -155,19 +201,19 @@ section { border-bottom: 1px solid var(--border); }
 }
 .about-card-num {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 80px; font-weight: 300; color: var(--border); line-height: 1;
+  font-size: 80px; font-weight: 300; color: var(--em); opacity:.3; line-height: 1;
 }
 .about-card-label {
-  font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--em); font-weight: 600;
 }
 .about-card-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
 .about-card-list li {
-  font-size: 14px; color: #6B675F;
+  font-size: 14px; color: var(--ink);
   display: flex; align-items: center; gap: 10px;
   padding-bottom: 12px; border-bottom: 1px solid var(--border);
 }
 .about-card-list li:last-child { border-bottom: none; }
-.about-card-list li::before { content: '—'; color: var(--border); }
+.about-card-list li::before { content: '—'; color: var(--em); }
 
 /* ── PROJECTS ── */
 .project-list { display: flex; flex-direction: column; }
@@ -193,11 +239,11 @@ section { border-bottom: 1px solid var(--border); }
   font-size: 26px; font-weight: 400; color: var(--ink);
   letter-spacing: -.01em; margin-bottom: 4px;
 }
-.project-meta { font-size: 11px; color: var(--muted); letter-spacing: .04em; }
+.project-meta { font-size: 12px; color: var(--ink); opacity: .6; letter-spacing: .04em; }
 .project-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 .project-tag-item {
-  font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--muted); border: 1px solid var(--border); padding: 3px 10px;
+  font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--border); padding: 5px 12px;
 }
 .project-arrow {
   font-size: 18px; color: var(--muted);
@@ -211,7 +257,7 @@ section { border-bottom: 1px solid var(--border); }
 .process-step { background: var(--bg); padding: 36px 28px; }
 .process-step-num {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 40px; font-weight: 300; color: var(--border); line-height: 1; margin-bottom: 20px;
+  font-size: 40px; font-weight: 300; color: var(--em); line-height: 1; margin-bottom: 20px;
 }
 .process-step h3 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 10px; }
 .process-step p { font-size: 12px; color: var(--muted); line-height: 1.7; }
@@ -259,7 +305,7 @@ footer {
   font-family: 'Cormorant Garamond', serif;
   font-size: 15px; font-weight: 300; color: var(--muted);
 }
-.footer-copy { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--border); }
+.footer-copy { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 
 /* ── CASE STUDY ── */
 .cs-page { background: var(--bg); min-height: 100vh; }
@@ -269,6 +315,7 @@ footer {
   display: flex; align-items: center; justify-content: space-between;
   background: rgba(247,245,240,0.95); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
+  transition: all .3s;
 }
 .cs-hero {
   padding: 140px 64px 80px;
@@ -287,14 +334,14 @@ footer {
   line-height: .95; letter-spacing: -.02em; color: var(--ink); margin-bottom: 24px;
 }
 .cs-title em { font-style: italic; color: var(--em); }
-.cs-subtitle { font-size: 16px; color: #6B675F; max-width: 560px; line-height: 1.7; margin-bottom: 56px; }
+.cs-subtitle { font-size: 16px; color: var(--ink); opacity: .7; max-width: 560px; line-height: 1.7; margin-bottom: 56px; }
 .cs-meta {
   display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
   border-top: 1px solid var(--border); padding-top: 40px;
 }
 .cs-meta-item { padding-right: 32px; border-right: 1px solid var(--border); }
 .cs-meta-item:last-child { border-right: none; }
-.cs-meta-label { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--em); margin-bottom: 6px; }
+.cs-meta-label { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--em); font-weight:600; margin-bottom: 6px; }
 .cs-meta-value { font-size: 14px; color: var(--ink); }
 .cs-body { max-width: 1200px; margin: 0 auto; padding: 80px 64px 120px; }
 .cs-section { margin-bottom: 80px; }
@@ -303,24 +350,24 @@ footer {
   padding-bottom: 20px; border-bottom: 1px solid var(--border);
 }
 .cs-section-num { font-family: 'Cormorant Garamond', serif; font-size: 13px; color: var(--em); }
-.cs-section-name { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.cs-section-name { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--em); }
 .cs-section-title {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(28px,4vw,44px); font-weight: 300;
   line-height: 1.1; color: var(--ink); margin-bottom: 20px;
 }
 .cs-section-title em { font-style: italic; color: var(--em); }
-.cs-text { font-size: 15px; color: #6B675F; line-height: 1.9; margin-bottom: 16px; max-width: 680px; }
+.cs-text { font-size: 15px; color: var(--ink); opacity: .75; line-height: 1.9; margin-bottom: 16px; max-width: 680px; }
 .cs-text strong { color: var(--ink); font-weight: 500; }
 .cs-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); margin-top: 40px; }
 .cs-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); margin-top: 40px; }
 .cs-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); margin-top: 40px; }
 .cs-card { background: var(--bg); padding: 32px 28px; }
 .cs-card h3 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 10px; }
-.cs-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.cs-card p { font-size: 13px; color: var(--ink); opacity: .7; line-height: 1.7; }
 .cs-card-num {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 40px; font-weight: 300; color: var(--border); line-height: 1; margin-bottom: 16px;
+  font-size: 40px; font-weight: 300; color: var(--em); opacity:.4; line-height: 1; margin-bottom: 16px;
 }
 .cs-tag-small { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--em); margin-bottom: 8px; display: block; }
 .cs-highlight {
@@ -340,7 +387,7 @@ footer {
   font-size: 10px; letter-spacing: .1em; color: var(--muted);
   flex-shrink: 0; margin-top: 3px; width: 28px;
 }
-.cs-pain-text { font-size: 14px; color: #6B675F; line-height: 1.6; }
+.cs-pain-text { font-size: 14px; color: var(--ink); opacity: .75; line-height: 1.6; }
 .cs-pain-text strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: 2px; }
 .cs-insights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 0; }
 .cs-insight {
@@ -352,12 +399,14 @@ footer {
 .cs-journey { border: 1px solid var(--border); margin-top: 40px; }
 .cs-journey-header { background: var(--surface); padding: 16px 24px; border-bottom: 1px solid var(--border); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .cs-journey-grid { display: grid; grid-template-columns: 100px repeat(4,1fr); }
-.cs-journey-cell { padding: 14px 18px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 12px; color: #6B675F; line-height: 1.5; }
+.cs-journey-cell { padding: 14px 18px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--ink); opacity: .75; line-height: 1.5; }
 .cs-journey-cell:last-child { border-right: none; }
 .cs-journey-cell.label { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
 .cs-journey-cell.header { font-weight: 500; color: var(--ink); }
-.cs-solution-box { background: var(--ink); padding: 48px 56px; margin-top: 40px; }
+.cs-solution-box { background: var(--ink); padding: 48px 56px; margin-top: 40px; border: 1px solid var(--border); }
 .cs-solution-box h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px,3vw,36px); font-weight: 300; color: var(--bg); line-height: 1.3; }
+[data-theme="dark"] .cs-solution-box h2 { color: var(--ink); }
+[data-theme="dark"] .cs-solution-box { background: var(--surface); }
 .cs-solution-box h2 em { font-style: italic; color: rgba(180,220,180,.6); }
 .cs-divider { border: none; border-top: 1px solid var(--border); margin: 64px 0; }
 
@@ -366,9 +415,9 @@ footer {
 .flow-item:last-child { border-bottom: none; }
 .flow-item.reverse { direction: rtl; }
 .flow-item.reverse > * { direction: ltr; }
-.flow-num { font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 300; color: var(--border); line-height: 1; margin-bottom: 12px; }
+.flow-num { font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 300; color: var(--em); opacity:.4; line-height: 1; margin-bottom: 12px; }
 .flow-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: var(--ink); margin-bottom: 12px; }
-.flow-desc { font-size: 14px; color: #6B675F; line-height: 1.7; }
+.flow-desc { font-size: 14px; color: var(--ink); opacity: .75; line-height: 1.7; }
 .flow-img-wrap { background: var(--surface); border: 1px solid var(--border); aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center; cursor: zoom-in; transition: border-color .3s; }
 .flow-img-wrap:hover { border-color: var(--em); }
 .flow-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -393,9 +442,9 @@ footer {
 /* Stats in case study */
 .cs-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); margin-top: 40px; }
 .cs-stat { background: var(--bg); padding: 32px 28px; }
-.cs-stat-value { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--ink); line-height: 1; margin-bottom: 8px; }
-.cs-stat-label { font-size: 12px; color: var(--muted); line-height: 1.5; }
-.cs-stat-sub { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--border); margin-top: 6px; }
+.cs-stat-value { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--em); line-height: 1; margin-bottom: 8px; }
+.cs-stat-label { font-size: 12px; color: var(--ink); opacity: .7; line-height: 1.5; }
+.cs-stat-sub { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
 
 @media(max-width:900px){
   nav, .cs-nav { padding: 20px 24px; }
@@ -413,6 +462,141 @@ footer {
   .flow-item.reverse { direction: ltr; }
   footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
 }
+
+/* ── DARK MODE ── */
+[data-theme="dark"] {
+  --bg: #0E0E0E;
+  --surface: #161616;
+  --ink: #EDEAE3;
+  --muted: #8A8780;
+  --border: #2A2A25;
+  --em: #6A9E6A;
+  --white: #FFFFFF;
+}
+[data-theme="dark"] .hero-desc,
+[data-theme="dark"] .about-text p,
+[data-theme="dark"] .cs-text,
+[data-theme="dark"] .contact-sub,
+[data-theme="dark"] .process-step p,
+[data-theme="dark"] .cs-card p,
+[data-theme="dark"] .flow-desc {
+  color: #B8B5AE;
+}
+[data-theme="dark"] .project-meta,
+[data-theme="dark"] .project-tag-item {
+  color: #8A8780 !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] nav {
+  background: rgba(14,14,14,0.97);
+}
+
+[data-theme="dark"] .about-card {
+  background: #161616;
+}
+
+[data-theme="dark"] .cs-dark-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+[data-theme="dark"] .cs-dark-box .cs-insight span {
+  color: rgba(237,234,227,0.6);
+}
+
+[data-theme="dark"] .cs-solution-box {
+  background: #1A1A1A;
+  border: 1px solid #252520;
+}
+
+[data-theme="dark"] .cs-solution-box h2 {
+  color: var(--ink);
+}
+
+[data-theme="dark"] .cs-solution-box h2 em {
+  color: rgba(237,234,227,.4);
+}
+
+[data-theme="dark"] .cs-journey-header {
+  background: #1A1A1A;
+}
+
+[data-theme="dark"] .process-step {
+  background: #0E0E0E;
+}
+
+[data-theme="dark"] .process-tools {
+  background: #161616;
+}
+
+[data-theme="dark"] .cs-nav {
+  background: rgba(14,14,14,0.97);
+}
+
+[data-theme="dark"] .flow-img-wrap {
+  background: #161616;
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 100px;
+  transition: all .3s;
+  color: var(--muted);
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+.theme-toggle:hover {
+  border-color: var(--em);
+  color: var(--em);
+}
+.theme-toggle-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+.theme-toggle-label {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+  .nav-links a.active {
+    color: var(--em);
+    border-bottom: 1px solid var(--em);
+    padding-bottom: 2px;
+  }
+
+[data-theme="dark"] .cs-text,
+[data-theme="dark"] .cs-subtitle,
+[data-theme="dark"] .cs-card p,
+[data-theme="dark"] .cs-pain-text,
+[data-theme="dark"] .cs-stat-label,
+[data-theme="dark"] .cs-journey-cell,
+[data-theme="dark"] .flow-desc {
+  color: #B8B5AE;
+  opacity: 1;
+}
+[data-theme="dark"] .cs-card-num,
+[data-theme="dark"] .flow-num {
+  opacity: .5;
+}
+[data-theme="dark"] .cs-journey-cell.label {
+  background: var(--surface);
+  color: var(--muted);
+  opacity: 1;
+}
+[data-theme="dark"] .cs-journey-cell.header {
+  color: var(--ink);
+  opacity: 1;
+}
 </style>
 </head>
 <body>
@@ -422,12 +606,15 @@ footer {
 <nav id="main-nav">
   <div class="nav-logo" onclick="goHome()">Leonel Divoy</div>
   <ul class="nav-links">
-    <li><a onclick="navTo('sobre-mi')">Sobre mí</a></li>
-    <li><a onclick="navTo('proyectos')">Proyectos</a></li>
-    <li><a onclick="navTo('proceso')">Proceso</a></li>
-    <li><a onclick="navTo('contacto')">Contacto</a></li>
+    <li><a onclick="navTo('sobre-mi')" data-section="sobre-mi">Sobre mí</a></li>
+    <li><a onclick="navTo('proyectos')" data-section="proyectos">Proyectos</a></li>
+    <li><a onclick="navTo('proceso')" data-section="proceso">Proceso</a></li>
+    <li><a onclick="navTo('contacto')" data-section="contacto">Contacto</a></li>
   </ul>
-  <button class="nav-cta" onclick="navTo('contacto')">Contactame</button>
+  <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+    <span class="theme-toggle-icon" id="theme-icon">○</span>
+    <span class="theme-toggle-label" id="theme-label">Dark</span>
+  </button>
 </nav>
 
 <section class="hero">
@@ -452,7 +639,6 @@ footer {
 <section id="sobre-mi">
   <div class="section-inner">
     <div class="section-header">
-      <span class="section-num">01</span>
       <h2 class="section-title">Sobre <em>mí</em></h2>
     </div>
     <div class="about-grid">
@@ -487,7 +673,6 @@ footer {
 <section id="proyectos">
   <div class="section-inner">
     <div class="section-header">
-      <span class="section-num">02</span>
       <h2 class="section-title">Proyectos <em>seleccionados</em></h2>
     </div>
     <div class="project-list">
@@ -530,18 +715,7 @@ footer {
         </div>
         <div class="project-arrow">→</div>
       </div>
-      <div class="project-item coming-soon">
-        <div class="project-num">04</div>
-        <div class="project-info">
-          <div class="project-title">Rediseño Mi Argentina</div>
-          <div class="project-meta">UX Research · En proceso · 2025</div>
-          <div class="project-tags">
-            <span class="project-tag-item">UX Research</span>
-            <span class="project-tag-item">Arquitectura IA</span>
-          </div>
-        </div>
-        <div class="project-arrow" style="opacity:.3">Pronto</div>
-      </div>
+
     </div>
   </div>
 </section>
@@ -549,7 +723,6 @@ footer {
 <section id="proceso">
   <div class="section-inner">
     <div class="section-header">
-      <span class="section-num">03</span>
       <h2 class="section-title">Cómo <em>trabajo</em></h2>
     </div>
     <div class="process-grid">
@@ -562,8 +735,7 @@ footer {
       <span class="process-tools-label">Stack</span>
       <div class="tools-row">
         <span class="tool-item">Figma</span>
-        <span class="tool-item">FigJam</span>
-        <span class="tool-item">Optimal Workshop</span>
+        <span class="tool-item">IA</span>
         <span class="tool-item">Photoshop</span>
         <span class="tool-item">Illustrator</span>
       </div>
@@ -575,10 +747,6 @@ footer {
   <div class="section-inner">
     <div class="contact-grid">
       <div>
-        <div class="section-header" style="margin-bottom:20px">
-          <span class="section-num">04</span>
-          <h2 class="section-title">Contacto</h2>
-        </div>
         <h2 class="contact-title">¿Trabajamos<br><em>juntos?</em></h2>
         <p class="contact-sub">Disponible para posiciones en relación de dependencia y proyectos freelance. Si tenés un producto con problemas de UX, hablemos.</p>
       </div>
@@ -599,10 +767,18 @@ footer {
 
 <!-- ══ CASE STUDY: DESPEGAR ══ -->
 <div id="page-despegar" class="page cs-page">
-<nav class="cs-nav">
-  <div class="nav-logo" onclick="goHome()" style="cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--ink)">Leonel Divoy</div>
-  <span style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)">01 / 04</span>
-  <button class="nav-cta" onclick="goHome()">← Volver</button>
+<nav class="cs-nav" id="cs-nav">
+  <div class="nav-logo" onclick="goHome()">Leonel Divoy</div>
+  <ul class="nav-links">
+    <li><a onclick="goHome();setTimeout(function(){navTo('sobre-mi')},50)" data-section="sobre-mi">Sobre mí</a></li>
+    <li><a onclick="goHome();setTimeout(function(){navTo('proyectos')},50)" data-section="proyectos">Proyectos</a></li>
+    <li><a onclick="goHome();setTimeout(function(){navTo('proceso')},50)" data-section="proceso">Proceso</a></li>
+    <li><a onclick="goHome();setTimeout(function(){navTo('contacto')},50)" data-section="contacto">Contacto</a></li>
+  </ul>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span class="theme-toggle-icon">○</span>
+    <span class="theme-toggle-label">Dark</span>
+  </button>
 </nav>
 <div class="cs-hero">
   <div class="cs-hero-eyebrow">UX Challenge · Boarding Pass 2025</div>
@@ -617,7 +793,7 @@ footer {
 </div>
 <div class="cs-body">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">01</span><span class="cs-section-name">El problema</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">El problema</span></div>
     <h2 class="cs-section-title">Existe la demanda.<br><em>No existe la experiencia.</em></h2>
     <p class="cs-text">Despegar tiene acceso a datos únicos del usuario: destino, fechas, perfil de comportamiento. Sin embargo, la experiencia post-compra no aprovecha este contexto para ofrecer productos complementarios cuando el usuario realmente los necesita.</p>
     <div class="cs-pain-list">
@@ -632,7 +808,7 @@ footer {
   </div>
   <hr class="cs-divider">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">02</span><span class="cs-section-name">Research</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">Research</span></div>
     <h2 class="cs-section-title">El usuario ya quiere<br><em>completar su viaje.</em></h2>
     <p class="cs-text">El análisis reveló que el usuario no rechaza los productos complementarios — los busca activamente en otras plataformas por falta de contexto y timing correcto en Despegar.</p>
     <div class="cs-grid-2">
@@ -657,7 +833,7 @@ footer {
   </div>
   <hr class="cs-divider">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">03</span><span class="cs-section-name">User Journey</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">User Journey</span></div>
     <h2 class="cs-section-title">Actual vs.<br><em>propuesto.</em></h2>
     <p class="cs-text">Se mapeó el journey de Lucía, 29 años, viaje a Río de Janeiro. El contraste evidencia el potencial sin explotar.</p>
     <div class="cs-journey">
@@ -669,7 +845,7 @@ footer {
       </div>
     </div>
     <div class="cs-journey" style="margin-top:12px">
-      <div class="cs-journey-header" style="background:var(--ink);color:rgba(247,245,240,.5)">Journey propuesto — experiencia integrada</div>
+      <div class="cs-journey-header" style="background:var(--em);color:#FFFFFF;letter-spacing:.12em">Journey propuesto — experiencia integrada</div>
       <div class="cs-journey-grid">
         <div class="cs-journey-cell label">Fase</div><div class="cs-journey-cell header">1 · Búsqueda</div><div class="cs-journey-cell header">2 · Post-compra</div><div class="cs-journey-cell header">3 · Planificación</div><div class="cs-journey-cell header">4 · Pre-viaje</div>
         <div class="cs-journey-cell label">Acciones</div><div class="cs-journey-cell">Busca en Despegar</div><div class="cs-journey-cell">Confirma + ve itinerario con recomendaciones</div><div class="cs-journey-cell">Compra alojamiento desde "Mis viajes"</div><div class="cs-journey-cell">Notificación, actividades y traslado</div>
@@ -679,7 +855,7 @@ footer {
   </div>
   <hr class="cs-divider">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">04</span><span class="cs-section-name">La solución</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">La solución</span></div>
     <h2 class="cs-section-title">Tres pilares para<br><em>completar el viaje.</em></h2>
     <div class="cs-grid-3">
       <div class="cs-card"><div class="cs-card-num">01</div><h3>Timeline inteligente</h3><p>Línea de tiempo visual que sugiere productos según la proximidad del viaje. Hitos contextuales en el momento justo.</p></div>
@@ -694,7 +870,7 @@ footer {
   </div>
   <hr class="cs-divider">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">05</span><span class="cs-section-name">Flujos diseñados</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">Flujos diseñados</span></div>
     <h2 class="cs-section-title">De la compra<br><em>al viaje completo.</em></h2>
     <p class="cs-text">Cuatro flujos principales que muestran cómo el usuario completa su itinerario paso a paso desde "Mis viajes".</p>
     <div style="margin-top:48px">
@@ -718,19 +894,27 @@ footer {
     <img class="cs-img" src="images/despegar/userflows.png" alt="Flujos completos" loading="lazy" onclick="openImgModal(this.src,this.alt)" style="margin-top:48px">
     <p class="cs-img-caption">↑ Clic para ampliar · Flujos completos en detalle</p>
   </div>
-  <div style="display:flex;gap:24px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--border)">
+  <div style="display:flex;gap:24px;flex-wrap:wrap;padding-top:32px;border-top:1px solid var(--border);justify-content:center">
+    <button class="btn-secondary-min" onclick="goHome()">Volver al portfolio</button>
     <button class="btn-primary-min" onclick="openCase('galicia')">Próximo proyecto →</button>
-    <button class="btn-secondary-min" onclick="goHome()">← Volver al portfolio</button>
   </div>
 </div>
 </div>
 
 <!-- ══ CASE STUDY: GALICIA ══ -->
 <div id="page-galicia" class="page cs-page">
-<nav class="cs-nav">
-  <div class="nav-logo" onclick="goHome()" style="cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--ink)">Leonel Divoy</div>
-  <span style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)">02 / 04</span>
-  <button class="nav-cta" onclick="goHome()">← Volver</button>
+<nav class="cs-nav" id="cs-nav">
+  <div class="nav-logo" onclick="goHome()">Leonel Divoy</div>
+  <ul class="nav-links">
+    <li><a onclick="goHome();setTimeout(function(){navTo('sobre-mi')},50)" data-section="sobre-mi">Sobre mí</a></li>
+    <li><a onclick="goHome();setTimeout(function(){navTo('proyectos')},50)" data-section="proyectos">Proyectos</a></li>
+    <li><a onclick="goHome();setTimeout(function(){navTo('proceso')},50)" data-section="proceso">Proceso</a></li>
+    <li><a onclick="goHome();setTimeout(function(){navTo('contacto')},50)" data-section="contacto">Contacto</a></li>
+  </ul>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span class="theme-toggle-icon">○</span>
+    <span class="theme-toggle-label">Dark</span>
+  </button>
 </nav>
 <div class="cs-hero">
   <div class="cs-hero-eyebrow">Proyecto educativo · Coderhouse</div>
@@ -745,14 +929,14 @@ footer {
 </div>
 <div class="cs-body">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">01</span><span class="cs-section-name">El problema</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">El problema</span></div>
     <h2 class="cs-section-title">El Token es el corazón<br><em>del problema.</em></h2>
     <p class="cs-text">La app del Banco Galicia tiene un pain point crítico: la generación del Token de seguridad requiere múltiples pasos, está en una sección poco intuitiva y no puede generarse desde donde el usuario lo busca naturalmente.</p>
     <div class="cs-highlight"><p>"Token Galicia se encuentra dentro de Seguridad, dentro de Más. No solo que se realizan dos pasos para acceder, sino que el Token no puede generarse desde esa sección."</p></div>
   </div>
   <hr class="cs-divider">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">02</span><span class="cs-section-name">Research</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">Research</span></div>
     <h2 class="cs-section-title">Lo que dicen<br><em>10 usuarios reales.</em></h2>
     <p class="cs-text">Entrevistas cualitativas con 10 usuarios del Banco Galicia para entender sus experiencias, identificando patrones de uso y puntos de fricción.</p>
     <div class="cs-dark-box">
@@ -769,7 +953,7 @@ footer {
   </div>
   <hr class="cs-divider">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">03</span><span class="cs-section-name">Arquitectura de información</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">Arquitectura de información</span></div>
     <h2 class="cs-section-title">Reorganizar antes<br><em>de rediseñar.</em></h2>
     <p class="cs-text">Card sorting abierto para obtener los rótulos y grupos de los usuarios, seguido de tree testing para validar la nueva arquitectura propuesta.</p>
     <div class="cs-stats">
@@ -780,7 +964,7 @@ footer {
   </div>
   <hr class="cs-divider">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">04</span><span class="cs-section-name">La solución</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">La solución</span></div>
     <h2 class="cs-section-title">Tres principios<br><em>de diseño.</em></h2>
     <div class="cs-grid-3">
       <div class="cs-card"><div class="cs-card-num">01</div><h3>Simplicidad</h3><p>Interfaz sin elementos innecesarios. El usuario encuentra lo que busca sin carga cognitiva extra.</p></div>
@@ -793,19 +977,27 @@ footer {
     <img class="cs-img" src="images/galicia/Desktop%20-%201.png" alt="Case study Galicia completo" loading="lazy" onclick="openImgModal(this.src,this.alt)" style="margin-top:40px">
     <p class="cs-img-caption">↑ Clic para ampliar · Proceso completo · Research, arquitectura, wireframes y pantallas finales</p>
   </div>
-  <div style="display:flex;gap:24px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--border)">
+  <div style="display:flex;gap:24px;flex-wrap:wrap;padding-top:32px;border-top:1px solid var(--border);justify-content:center">
+    <button class="btn-secondary-min" onclick="goHome()">Volver al portfolio</button>
     <button class="btn-primary-min" onclick="openCase('meliplay')">Próximo proyecto →</button>
-    <button class="btn-secondary-min" onclick="goHome()">← Volver al portfolio</button>
   </div>
 </div>
 </div>
 
 <!-- ══ CASE STUDY: MELI PLAY ══ -->
 <div id="page-meliplay" class="page cs-page">
-<nav class="cs-nav">
-  <div class="nav-logo" onclick="goHome()" style="cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--ink)">Leonel Divoy</div>
-  <span style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)">03 / 04</span>
-  <button class="nav-cta" onclick="goHome()">← Volver</button>
+<nav class="cs-nav" id="cs-nav">
+  <div class="nav-logo" onclick="goHome()">Leonel Divoy</div>
+  <ul class="nav-links">
+    <li><a onclick="goHome();setTimeout(function(){navTo('sobre-mi')},50)" data-section="sobre-mi">Sobre mí</a></li>
+    <li><a onclick="goHome();setTimeout(function(){navTo('proyectos')},50)" data-section="proyectos">Proyectos</a></li>
+    <li><a onclick="goHome();setTimeout(function(){navTo('proceso')},50)" data-section="proceso">Proceso</a></li>
+    <li><a onclick="goHome();setTimeout(function(){navTo('contacto')},50)" data-section="contacto">Contacto</a></li>
+  </ul>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span class="theme-toggle-icon">○</span>
+    <span class="theme-toggle-label">Dark</span>
+  </button>
 </nav>
 <div class="cs-hero">
   <div class="cs-hero-eyebrow">Proyecto personal · 2024</div>
@@ -820,7 +1012,7 @@ footer {
 </div>
 <div class="cs-body">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">01</span><span class="cs-section-name">El problema</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">El problema</span></div>
     <h2 class="cs-section-title">La plataforma existe.<br><em>La experiencia, no.</em></h2>
     <p class="cs-text">MeLi Play ofrece películas, series, documentales y producciones locales de forma gratuita. Sin embargo, la experiencia de navegación y descubrimiento no está a la altura de lo que los usuarios esperan de una plataforma de streaming.</p>
     <div class="cs-grid-2">
@@ -830,7 +1022,7 @@ footer {
   </div>
   <hr class="cs-divider">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">02</span><span class="cs-section-name">Proceso</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">Proceso</span></div>
     <h2 class="cs-section-title">De wireframes<br><em>a pantallas finales.</em></h2>
     <p class="cs-text">El proceso incluyó wireframes en baja y alta fidelidad para desktop y mobile, asegurando una experiencia consistente en todas las plataformas.</p>
     <div class="cs-grid-4">
@@ -844,7 +1036,7 @@ footer {
   </div>
   <hr class="cs-divider">
   <div class="cs-section">
-    <div class="cs-section-header"><span class="cs-section-num">03</span><span class="cs-section-name">Contexto</span></div>
+    <div class="cs-section-header"><span class="cs-section-name">Contexto</span></div>
     <h2 class="cs-section-title">Una plataforma que<br><em>se siente propia.</em></h2>
     <p class="cs-text">El rediseño logró una experiencia de navegación más clara y un sistema visual consistente que le da identidad propia a MeLi Play dentro del ecosistema de Mercado Libre.</p>
     <div class="cs-highlight"><p>Este proyecto fue realizado como challenge personal. La problemática fue proporcionada externamente. Mi aporte fue el análisis de la experiencia actual, las decisiones de diseño de la navegación y la propuesta visual final.</p></div>
@@ -873,4 +1065,44 @@ function closeModal(e){if(e.target===document.getElementById('imgModal'))closeIm
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeImgModal()})
 
 const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}})},{threshold:.08});
-document.querySelectorAll('.project-item,.process-step,.about-c
+document.querySelectorAll('.project-item,.process-step,.about-card,.contact-link,.cs-card,.cs-pain-item,.flow-item,.cs-stat').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity .6s ease,transform .6s ease';obs.observe(el);
+});
+
+
+// ── SCROLL SPY
+function updateActiveNav() {
+  var homePage = document.getElementById('page-home');
+  if (!homePage || !homePage.classList.contains('active')) return;
+  var ids = ['sobre-mi','proyectos','proceso','contacto'];
+  var current = null;
+  // If near bottom of page, force contacto
+  var nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 80;
+  if (nearBottom) {
+    current = 'contacto';
+  } else {
+    for (var i = ids.length - 1; i >= 0; i--) {
+      var el = document.getElementById(ids[i]);
+      if (el && el.getBoundingClientRect().top <= 160) {
+        current = ids[i];
+        break;
+      }
+    }
+  }
+  document.querySelectorAll('.nav-links a').forEach(function(a){ a.classList.remove('active'); });
+  if (current) {
+    var active = document.querySelector('.nav-links a[data-section="' + current + '"]');
+    if (active) active.classList.add('active');
+  }
+}
+window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+// Trigger on navTo
+var _origNavTo = navTo;
+navTo = function(id) {
+  _origNavTo(id);
+  setTimeout(updateActiveNav, 200);
+};
+</script>
+</body>
+</html>
