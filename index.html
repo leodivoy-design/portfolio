@@ -597,6 +597,84 @@ footer {
   color: var(--ink);
   opacity: 1;
 }
+
+  /* ── HAMBURGER ── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--ink);
+    transition: all .3s;
+    transform-origin: center;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .nav-mobile-menu {
+    display: none;
+    position: fixed;
+    top: 49px;
+    left: 0; right: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 24px 32px;
+    z-index: 99;
+    flex-direction: column;
+    gap: 0;
+  }
+  .nav-mobile-menu.open { display: flex; }
+  .nav-mobile-menu a {
+    font-size: 13px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: color .2s;
+  }
+  .nav-mobile-menu a:last-child { border-bottom: none; }
+  .nav-mobile-menu a:hover,
+  .nav-mobile-menu a.active { color: var(--em); }
+
+  @media(max-width:900px) {
+    nav {
+      padding: 16px 24px !important;
+    }
+    .cs-nav {
+      padding: 16px 24px !important;
+    }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 80px 24px 48px !important;
+    }
+    .section-inner { padding: 64px 24px; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .process-grid { grid-template-columns: 1fr 1fr; }
+    .process-tools { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .cs-hero { padding: 80px 24px 48px !important; }
+    .cs-body { padding: 48px 24px 80px; }
+    .cs-meta { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .cs-grid-2, .cs-grid-3, .cs-insights-grid { grid-template-columns: 1fr; }
+    .cs-grid-4 { grid-template-columns: 1fr 1fr; }
+    .flow-item, .flow-item.reverse { grid-template-columns: 1fr; direction: ltr; }
+    .hero-stats { flex-wrap: wrap; gap: 24px; }
+    footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+    .cs-journey-grid { grid-template-columns: 70px repeat(4,1fr); font-size: 11px; }
+  }
 </style>
 </head>
 <body>
@@ -611,11 +689,22 @@ footer {
     <li><a onclick="navTo('proceso')" data-section="proceso">Proceso</a></li>
     <li><a onclick="navTo('contacto')" data-section="contacto">Contacto</a></li>
   </ul>
-  <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
-    <span class="theme-toggle-icon" id="theme-icon">○</span>
-    <span class="theme-toggle-label" id="theme-label">Dark</span>
-  </button>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+      <span class="theme-toggle-icon" id="theme-icon">○</span>
+      <span class="theme-toggle-label" id="theme-label">Dark</span>
+    </button>
+    <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
+<div class="nav-mobile-menu" id="mobile-menu">
+  <a onclick="closeMobileMenu();navTo('sobre-mi')" data-section="sobre-mi">Sobre mí</a>
+  <a onclick="closeMobileMenu();navTo('proyectos')" data-section="proyectos">Proyectos</a>
+  <a onclick="closeMobileMenu();navTo('proceso')" data-section="proceso">Proceso</a>
+  <a onclick="closeMobileMenu();navTo('contacto')" data-section="contacto">Contacto</a>
+</div>
 
 <section class="hero">
   <div class="hero-left">
@@ -1103,6 +1192,32 @@ navTo = function(id) {
   _origNavTo(id);
   setTimeout(updateActiveNav, 200);
 };
+
+// ── HAMBURGER MENU
+function toggleMenu() {
+  var btn = document.getElementById('hamburger');
+  var menu = document.getElementById('mobile-menu');
+  if (!btn || !menu) return;
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+function closeMobileMenu() {
+  var btn = document.getElementById('hamburger');
+  var menu = document.getElementById('mobile-menu');
+  if (btn) btn.classList.remove('open');
+  if (menu) menu.classList.remove('open');
+}
+// Close menu when clicking outside
+document.addEventListener('click', function(e) {
+  var menu = document.getElementById('mobile-menu');
+  var btn = document.getElementById('hamburger');
+  if (menu && menu.classList.contains('open')) {
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+      closeMobileMenu();
+    }
+  }
+});
+
 </script>
 </body>
 </html>
